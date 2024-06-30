@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ucapan Maaf</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+	     <audio id="audioPlayer" controls autoplay>
+      <source src="./cundamani.mp3" type="audio/mpeg">
+      Maaf, browser Anda tidak mendukung elemen audio.
+  </audio>
+        <h1>Maaf dari Alwan untuk Warda</h1>
+        <div id="quoteContainer" class="quote">
+            <p id="quoteText"></p>
+            <button id="repeatButton" onclick="repeatQuotes()">Lihat Ulang</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+<style>
+/* styles.css */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fff;
+    color: #333;
+    overflow: hidden;
+    position: relative;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+    z-index: 1;
+}
+
+h1 {
+    color: #ff6347;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.quote {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 8px;
+    font-style: italic;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+
+.quote.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.heart {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    transform: rotate(45deg);
+    animation: float 6s linear infinite;
+}
+
+.heart::before,
+.heart::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.heart::before {
+    top: -10px;
+    left: 0;
+}
+
+.heart::after {
+    left: 10px;
+    top: 0;
+}
+
+/* styles.css */
+#repeatButton {
+    display: none; /* Initially hide the button */
+    background-color: #ff6347;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+#repeatButton:hover {
+    background-color: #e64a35;
+}
+
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) rotate(-40deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(-50deg);
+        opacity: 0;
+    }
+}
+
+
+</style>
+<script>
+        const quotes = [
+            "Aku meminta maaf dari lubuk hatiku yang paling dalam. Kata-kata ini mungkin tidak cukup, namun aku berharap kamu bisa merasakan ketulusan permintaanku.",
+            "Maafkan aku atas setiap luka yang telah kubuat. Aku tidak pernah bermaksud menyakitimu dan akan selalu berusaha memperbaikinya.",
+            "Mengucapkan kata maaf tidak akan mengubah masa lalu, tetapi ini adalah langkah pertama untuk memperbaiki kesalahan yang telah terjadi.",
+            "Aku tahu aku telah membuatmu kesal dan merasa diremehkan saat kamu membutuhkan teman untuk bercerita. Namun, aku tidak bermaksud seperti itu.",
+            "Aku hanya tidak ingin kamu terus tertekan mengenang masalahmu. Aku juga tidak ingin kamu kelelahan karena terlalu memaksakan diri mencari uang.",
+            "Terkadang, kita semua butuh kebahagiaan dan istirahat. Pikiran kita seringkali membuat kita sedih, tapi kita harus belajar melupakannya.",
+            "Aku mengerti jika kamu marah atau kesal saat aku memberikan nasehat. Percayalah, aku adalah orang yang baik dan tidak bermaksud menyakiti. Namun, cara menyampaikanku mungkin agak berbeda.",
+            "Aku mungkin tidak bisa menghapus kesalahan yang telah kulakukan, tetapi aku berjanji akan terus berusaha menjadi orang yang lebih baik lagi. Maafkan aku.",
+            "Terima kasih telah selalu menjadi temanku yang ada di sampingku, teman untuk bercerita dan mungkin juga teman untuk melalui hidup bersama nanti.",
+			"Jika memang takdir, segala sesuatu akan terjadi pada saat yang tepat. Bersabarlah dan percayalah padaku, karena segalanya akan berjalan dengan cara yang seharusnya.",
+			"Takdir menempatkan jarak di antara kita, bukan sebagai halangan, melainkan sebagai ujian yang menguatkan satu sama lain.",
+			"Mari kita terus menjadi teman yang saling mengarungi cerita kehidupan ini bersama, berbagi suka dan duka, tanpa memedulikan seberapa jauh waktu membawa kita.",
+            "Selamat hari Minggu! Semoga selalu dalam kebahagiaan, nikmati setiap momen hidupmu dengan penuh kegembiraan. Jangan ragu untuk berbagi semuanya denganku.",
+            "Dari Alwan untuk Warda dengan extra love, Jakarta 30 Juni 2024 (03:00 -08:00)."
+        ];
+		
+
+        let currentIndex = 0;
+        let intervalId = null;
+	
+
+        function showQuote(index) {
+            const quoteText = document.getElementById('quoteText');
+            const quoteContainer = document.getElementById('quoteContainer');
+            quoteContainer.classList.remove('show');
+            setTimeout(() => {
+                quoteText.textContent = quotes[index];
+                quoteContainer.classList.add('show');
+                // Hide repeat button if not the last quote
+				if(index === quotes.length - 1){
+				 document.getElementById('repeatButton').textContent = "Lihat Ulang";
+				}
+                document.getElementById('repeatButton').style.display = (index === quotes.length - 1) ? 'inline-block' : 'none';
+            }, 1000);
+        }
+
+        function nextQuote() {
+            currentIndex = (currentIndex + 1) % quotes.length;
+            showQuote(currentIndex);
+            if (currentIndex === quotes.length - 1) {
+                clearInterval(intervalId); // Stop interval when reaching the last quote
+            }
+        }
+
+        function startRotation() {
+		    showQuote(currentIndex);
+			 intervalId = setInterval(nextQuote, 8000);
+             // Change quote every 8.5 seconds
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setCustomTextBefore();
+            createHearts();
+        });
+		
+		function setCustomTextBefore(){
+		    const quoteText = document.getElementById('quoteText');
+			const quoteContainer = document.getElementById('quoteContainer');
+            quoteContainer.classList.remove('show');
+			quoteText.textContent = "Pesan rahasia ditulis saat tidak bisa tidur.";
+			quoteContainer.classList.add('show');
+			const buttonRepeat =  document.getElementById('repeatButton');
+			buttonRepeat.textContent = "Lihat Pesan";
+			buttonRepeat.style.display ='inline-block';
+			clearInterval(intervalId);
+		}
+
+        function createHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.style.left = `${Math.random() * 100}vw`;
+                heart.style.animationDuration = 100000; // Random duration between 4-6 seconds
+                document.body.appendChild(heart);
+
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000); // Remove heart after 6 seconds
+            }, 500); // Create a new heart every 0.5 seconds
+        }
+
+        function repeatQuotes() {
+            currentIndex = 0;
+            startRotation();
+			setInterval(() => {
+			  play();
+            }, 2000);
+        }
+		
+	  function play() {
+        var audio = document.getElementById("audioPlayer");
+        audio.play();
+      }
+    </script>
